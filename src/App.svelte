@@ -4,7 +4,7 @@
   import "bootstrap/dist/css/bootstrap.min.css";
 
   let charts = [
-    { id: 1, name: "First chart", component: FirstChart },
+    { id: 1, name: "Hackathon Data", component: FirstChart },
     { id: 2, name: "Second chart", component: SecondChart },
   ];
   let showingChart = charts[0];
@@ -14,7 +14,7 @@
   <div class="container">
     <div class="row">
       <div class="col" />
-      <div class="col-8">
+      <div class="col-10">
         <select
           bind:value={showingChart}
           class="form-select"
