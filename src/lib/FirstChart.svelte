@@ -1,6 +1,12 @@
 <script>
   import Plotly from "plotly.js-dist-min";
   import { onMount } from "svelte";
+  import energyData  from "../assets/energy.json";
+
+    var x_values = [];
+    var y_values = [];
+
+    console.log(energyData);
 
     onMount(() => {
         Plotly.newPlot(
