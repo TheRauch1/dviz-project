@@ -69,7 +69,11 @@
     //debugger;
   }
 
-  function removeElement(e) {}
+  function removeElement() {
+    debugger;
+    data = data.filter((item) => {return item !== selectedCountry});
+    createPlot();
+  }
 
   onMount(() => {
     createPlot();
