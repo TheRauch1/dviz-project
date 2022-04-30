@@ -63,10 +63,10 @@
   }
 
   function addElement() {
-    data.push(addTrace(newSelectedCountry));
+    data = [...data, addTrace(newSelectedCountry)];
     createPlot();
     newSelectedCountry = "";
-    debugger;
+    //debugger;
   }
 
   function removeElement(e) {}
@@ -92,14 +92,16 @@
           </select>
         </div>
         <div class="row">
-          <select bind:value={data} size={8}>
+          <select bind:value={selectedCountry} size={8} class="form-select">
             {#each data as country}
               <option value={country}>{country.name}</option>
             {/each}
           </select>
         </div>
         <div class="row">
-          <button disabled={!newSelectedCountry} on:click={addElement}>Add</button>
+          <button disabled={!newSelectedCountry} on:click={addElement}
+            >Add</button
+          >
           <button disabled={!selectedCountry} on:click={removeElement}
             >Delete</button
           >
