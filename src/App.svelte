@@ -10,9 +10,9 @@
 
   var countryToIndexMap = {};
   var countryList = new Set();
-  var newSelectedCountry = "";
   var data = [];
-  var selectedCountry;
+  var searchKey = "";
+  var filteredCountryList = Array.from(countryList);
 
   for (const key in countries) {
     const country = countries[key];
@@ -45,6 +45,17 @@
     return trace;
   }
 
+  function searchCountry() {
+    var countries = Array.from(countryList);
+    if (searchKey != "") {
+      filteredCountryList = countries.filter(country =>  {
+        return country.toLowerCase().search(searchKey.toLowerCase()) >= 0;
+      })
+    } else {
+      filteredCountryList = countries;
+    }
+  }
+
   data.push(createTrace("World"));
 
   var layout = {
@@ -52,8 +63,8 @@
     dragmode: "pan",
     showlegend: true,
     yaxis: {
-      tickformat: "10,",
-      ticksuffix: " Twh",
+      tickformat: "100,",
+      ticksuffix: " MWh",
     },
   };
 
@@ -63,11 +74,13 @@
   }
 
   function isCountryOnPlot(country) {
-    data.forEach(trace => {
-      debugger;
-      if (trace.name == country) {return true}
-    });
-    return false;
+    var result = false;
+    for (var trace of data) {
+      if (trace["name"] == country) {
+        result = true;
+      }
+    }
+    return result;
   }
 
   function addCountryToPlot(country) {
@@ -76,48 +89,69 @@
   }
 
   function removeCountryFromPlot(country) {
-    debugger;
-    data = data.filter((item) => {return item !== country});
+    data = data.filter((item) => {
+      return item.name !== country;
+    });
     createPlot();
   }
 
   function toggleCountry(country) {
-    if (!isCountryOnPlot(country)) {
-      addCountryToPlot(country)
+    var test = !isCountryOnPlot(country);
+    if (test) {
+      addCountryToPlot(country);
     } else {
-      removeCountryFromPlot(country)
+      removeCountryFromPlot(country);
     }
+  }
+
+  function setWorldMarker() {
+    console.log(document.querySelector("[value=World]"))
+    //document.querySelector('option[value=World]').selected = true;
   }
 
   onMount(() => {
     createPlot();
+    searchCountry();
+    setWorldMarker();
   });
 </script>
 
 <main>
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">Energy Dashboard</span>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row ">
+      <aside class="col-3">
         <div class="row">
+          <div class="input-group">
+            <span class="input-group-text">Search</span>
+            <input type="text" class="form-control" bind:value={searchKey} on:input={searchCountry}> 
+          </div>
+        </div>
+        <div class="row vh-100 overflow-auto">
           <div class="list-group">
-            {#each Array.from(countryList) as country}
-            <label>
-              <input type=checkbox on:click={() => {toggleCountry(country)}} value={country}>
-              {country}
-            </label>
+            {#each filteredCountryList as country}
+              <label>
+                <div class="list-group-item">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    on:click={() => {
+                      toggleCountry(country);
+                    }}
+                    value={country}
+                  />
+                  {country}
+                </div>
+              </label>
             {/each}
           </div>
         </div>
-        <div class="row">
-          <button disabled={!newSelectedCountry} on:click={addCountryToPlot}
-            >Add</button
-          >
-          <button disabled={!selectedCountry} on:click={removeCountryFromPlot}
-            >Delete</button
-          >
-        </div>
-      </div>
-      <div class="col-8">
+      </aside>
+      <div class="col-9">
         <div id="energyChart" />
       </div>
     </div>
