@@ -27,7 +27,7 @@
   console.log(countryToIndexMap);
   console.log(countryList);
 
-  function addTrace(name) {
+  function createTrace(name) {
     var xValues = [];
     var yValues = [];
 
@@ -45,7 +45,7 @@
     return trace;
   }
 
-  data.push(addTrace("World"));
+  data.push(createTrace("World"));
 
   var layout = {
     title: "Primary Energy",
@@ -62,17 +62,31 @@
     Plotly.newPlot("energyChart", data, layout, { scrollZoom: true });
   }
 
-  function addElement() {
-    data = [...data, addTrace(newSelectedCountry)];
-    createPlot();
-    newSelectedCountry = "";
-    //debugger;
+  function isCountryOnPlot(country) {
+    data.forEach(trace => {
+      debugger;
+      if (trace.name == country) {return true}
+    });
+    return false;
   }
 
-  function removeElement() {
-    debugger;
-    data = data.filter((item) => {return item !== selectedCountry});
+  function addCountryToPlot(country) {
+    data = [...data, createTrace(country)];
     createPlot();
+  }
+
+  function removeCountryFromPlot(country) {
+    debugger;
+    data = data.filter((item) => {return item !== country});
+    createPlot();
+  }
+
+  function toggleCountry(country) {
+    if (!isCountryOnPlot(country)) {
+      addCountryToPlot(country)
+    } else {
+      removeCountryFromPlot(country)
+    }
   }
 
   onMount(() => {
@@ -85,28 +99,20 @@
     <div class="row">
       <div class="col-4">
         <div class="row">
-          <select
-            bind:value={newSelectedCountry}
-            class="form-select"
-            aria-label="Default select example"
-          >
+          <div class="list-group">
             {#each Array.from(countryList) as country}
-              <option value={country}>{country}</option>
+            <label>
+              <input type=checkbox on:click={() => {toggleCountry(country)}} value={country}>
+              {country}
+            </label>
             {/each}
-          </select>
+          </div>
         </div>
         <div class="row">
-          <select bind:value={selectedCountry} size={8} class="form-select">
-            {#each data as country}
-              <option value={country}>{country.name}</option>
-            {/each}
-          </select>
-        </div>
-        <div class="row">
-          <button disabled={!newSelectedCountry} on:click={addElement}
+          <button disabled={!newSelectedCountry} on:click={addCountryToPlot}
             >Add</button
           >
-          <button disabled={!selectedCountry} on:click={removeElement}
+          <button disabled={!selectedCountry} on:click={removeCountryFromPlot}
             >Delete</button
           >
         </div>
