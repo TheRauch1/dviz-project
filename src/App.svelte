@@ -10,9 +10,9 @@
 
   var countryToIndexMap = {};
   var countryList = new Set();
-  var newSelectedCountry = "";
   var data = [];
-  var selectedCountry;
+  var searchKey = "";
+  var filteredCountryList = Array.from(countryList);
 
   for (const key in countries) {
     const country = countries[key];
@@ -27,7 +27,7 @@
   console.log(countryToIndexMap);
   console.log(countryList);
 
-  function addTrace(name) {
+  function createTrace(name) {
     var xValues = [];
     var yValues = [];
 
@@ -45,15 +45,26 @@
     return trace;
   }
 
-  data.push(addTrace("World"));
+  function searchCountry() {
+    var countries = Array.from(countryList);
+    if (searchKey != "") {
+      filteredCountryList = countries.filter(country =>  {
+        return country.toLowerCase().search(searchKey.toLowerCase()) >= 0;
+      })
+    } else {
+      filteredCountryList = countries;
+    }
+  }
+
+  data.push(createTrace("World"));
 
   var layout = {
     title: "Primary Energy",
     dragmode: "pan",
     showlegend: true,
     yaxis: {
-      tickformat: "10,",
-      ticksuffix: " Twh",
+      tickformat: "100,",
+      ticksuffix: " MWh",
     },
   };
 
@@ -62,56 +73,85 @@
     Plotly.newPlot("energyChart", data, layout, { scrollZoom: true });
   }
 
-  function addElement() {
-    data = [...data, addTrace(newSelectedCountry)];
-    createPlot();
-    newSelectedCountry = "";
-    //debugger;
+  function isCountryOnPlot(country) {
+    var result = false;
+    for (var trace of data) {
+      if (trace["name"] == country) {
+        result = true;
+      }
+    }
+    return result;
   }
 
-  function removeElement() {
-    debugger;
-    data = data.filter((item) => {return item !== selectedCountry});
+  function addCountryToPlot(country) {
+    data = [...data, createTrace(country)];
     createPlot();
+  }
+
+  function removeCountryFromPlot(country) {
+    data = data.filter((item) => {
+      return item.name !== country;
+    });
+    createPlot();
+  }
+
+  function toggleCountry(country) {
+    var test = !isCountryOnPlot(country);
+    if (test) {
+      addCountryToPlot(country);
+    } else {
+      removeCountryFromPlot(country);
+    }
+  }
+
+  function setWorldMarker() {
+    console.log(document.querySelector("[value=World]"))
+    //document.querySelector('option[value=World]').selected = true;
   }
 
   onMount(() => {
     createPlot();
+    searchCountry();
+    setWorldMarker();
   });
 </script>
 
 <main>
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">Energy Dashboard</span>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row ">
+      <aside class="col-3">
         <div class="row">
-          <select
-            bind:value={newSelectedCountry}
-            class="form-select"
-            aria-label="Default select example"
-          >
-            {#each Array.from(countryList) as country}
-              <option value={country}>{country}</option>
+          <div class="input-group">
+            <span class="input-group-text">Search</span>
+            <input type="text" class="form-control" bind:value={searchKey} on:input={searchCountry}> 
+          </div>
+        </div>
+        <div class="row vh-100 overflow-auto">
+          <div class="list-group">
+            {#each filteredCountryList as country}
+              <label>
+                <div class="list-group-item">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    on:click={() => {
+                      toggleCountry(country);
+                    }}
+                    value={country}
+                  />
+                  {country}
+                </div>
+              </label>
             {/each}
-          </select>
+          </div>
         </div>
-        <div class="row">
-          <select bind:value={selectedCountry} size={8} class="form-select">
-            {#each data as country}
-              <option value={country}>{country.name}</option>
-            {/each}
-          </select>
-        </div>
-        <div class="row">
-          <button disabled={!newSelectedCountry} on:click={addElement}
-            >Add</button
-          >
-          <button disabled={!selectedCountry} on:click={removeElement}
-            >Delete</button
-          >
-        </div>
-      </div>
-      <div class="col-8">
+      </aside>
+      <div class="col-9">
         <div id="energyChart" />
       </div>
     </div>
