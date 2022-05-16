@@ -1,62 +1,26 @@
 <script>
   import Plotly from "plotly.js-dist-min";
-  import { createEventDispatcher, onMount } from "svelte";
-  import energyData from "./assets/energy.json";
+  import { onMount } from "svelte";
   import "bootstrap/dist/css/bootstrap.min.css";
+  import { dataAPI } from "./lib/dataAPI.js";
 
-  var countries = energyData["Country"];
-  var years = energyData["Year"];
-  var energy = energyData["Primary energy (TWh)"];
+  var data = new dataAPI();
 
-  var countryToIndexMap = {};
-  var countryList = new Set();
-  var data = [];
-  var searchKey = "";
-  var filteredCountryList = Array.from(countryList);
+  var plotData = [];
+  var plottedCountries = [];
+  var filteredCountryList = data.countryList;
 
-  for (const key in countries) {
-    const country = countries[key];
-    countryList.add(country);
-    if (country in countryToIndexMap) {
-      countryToIndexMap[country].push(key);
-    } else {
-      countryToIndexMap[country] = [];
-      countryToIndexMap[country].push(key);
-    }
-  }
-  console.log(countryToIndexMap);
-  console.log(countryList);
-
-  function createTrace(name) {
-    var xValues = [];
-    var yValues = [];
-
-    countryToIndexMap[name].forEach((index) => {
-      xValues.push(years[index]);
-      yValues.push(energy[index]);
-    });
-    var trace = {
-      name: name,
-      x: xValues,
-      y: yValues,
-      type: "scatter",
-    };
-    console.log(trace);
-    return trace;
-  }
-
-  function searchCountry() {
-    var countries = Array.from(countryList);
+  function filterCountry(e) {
+    var searchKey = e.currentTarget.value;
+    debugger;
     if (searchKey != "") {
-      filteredCountryList = countries.filter(country =>  {
+      filteredCountryList = data.countryList.filter((country) => {
         return country.toLowerCase().search(searchKey.toLowerCase()) >= 0;
-      })
+      });
     } else {
-      filteredCountryList = countries;
+      filteredCountryList = data.countryList;
     }
   }
-
-  data.push(createTrace("World"));
 
   var layout = {
     title: "Primary Energy",
@@ -64,18 +28,18 @@
     showlegend: true,
     yaxis: {
       tickformat: "100,",
-      ticksuffix: " MWh",
+      ticksuffix: " TWh",
     },
   };
 
-  function createPlot() {
+  function recreatePlot() {
     document.getElementById("energyChart").innerHTML = "";
-    Plotly.newPlot("energyChart", data, layout, { scrollZoom: true });
+    Plotly.newPlot("energyChart", plotData, layout, { scrollZoom: true });
   }
 
   function isCountryOnPlot(country) {
     var result = false;
-    for (var trace of data) {
+    for (var trace of plotData) {
       if (trace["name"] == country) {
         result = true;
       }
@@ -84,35 +48,33 @@
   }
 
   function addCountryToPlot(country) {
-    data = [...data, createTrace(country)];
-    createPlot();
+    plotData = [...plotData, data.createTrace(country)];
+    plottedCountries = [...plottedCountries, country];
+    recreatePlot();
   }
 
   function removeCountryFromPlot(country) {
-    data = data.filter((item) => {
+    plotData = plotData.filter((item) => {
       return item.name !== country;
     });
-    createPlot();
+    plottedCountries = plottedCountries.filter((item) => {
+      return item !== country;
+    });
+    recreatePlot();
   }
 
   function toggleCountry(country) {
-    var test = !isCountryOnPlot(country);
-    if (test) {
+    if (!isCountryOnPlot(country)) {
       addCountryToPlot(country);
     } else {
       removeCountryFromPlot(country);
     }
-  }
-
-  function setWorldMarker() {
-    console.log(document.querySelector("[value=World]"))
-    //document.querySelector('option[value=World]').selected = true;
+    console.log(plotData);
   }
 
   onMount(() => {
-    createPlot();
-    searchCountry();
-    setWorldMarker();
+    addCountryToPlot("World");
+    recreatePlot();
   });
 </script>
 
@@ -128,7 +90,7 @@
         <div class="row">
           <div class="input-group">
             <span class="input-group-text">Search</span>
-            <input type="text" class="form-control" bind:value={searchKey} on:input={searchCountry}> 
+            <input type="text" class="form-control" on:input={filterCountry} />
           </div>
         </div>
         <div class="row vh-100 overflow-auto">
@@ -136,14 +98,28 @@
             {#each filteredCountryList as country}
               <label>
                 <div class="list-group-item">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    on:click={() => {
-                      toggleCountry(country);
-                    }}
-                    value={country}
-                  />
+                  {#if plottedCountries.includes(country)}
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      checked
+                      id="country-{country}"
+                      on:click={() => {
+                        toggleCountry(country);
+                      }}
+                      value={country}
+                    />
+                  {:else}
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="country-{country}"
+                      on:click={() => {
+                        toggleCountry(country);
+                      }}
+                      value={country}
+                    />
+                  {/if}
                   {country}
                 </div>
               </label>
