@@ -4,10 +4,16 @@ class dataAPI {
     constructor() {
         this.countries = energyData["Country"];
         this.years = energyData["Year"];
+        this.firstYear = Math.min.apply(Math, Object.values(this.years));
+        this.lastYear = Math.max.apply(Math, Object.values(this.years));
         this.energy = energyData["Primary energy (TWh)"];
         this.countryList = [];
         this.countryToIndexMap = {};
         this.searchString = "";
+        this.worldMapZData = [];
+        this.worldMapCountryData = [];
+        this.worldMapDefaultYear = 2020;
+        this.countriesWithNoData = ["World", "Europe", "Africa", "Europian Union"];
 
         for (const key in this.countries) {
             const country = this.countries[key];
@@ -19,6 +25,8 @@ class dataAPI {
                 this.countryToIndexMap[country].push(key);
             }
         }
+
+        this.genWorldData(this.worldMapDefaultYear)
     }
 
     createTrace(name) {
@@ -37,6 +45,22 @@ class dataAPI {
         };
         console.log(trace);
         return trace;
+    }
+
+    genWorldData(year) {
+        this.worldMapCountryData = [];
+        this.worldMapZData = [];
+        for (const country in this.countryToIndexMap) {
+            for (const [key, value] of Object.entries(this.countryToIndexMap[country])) {
+                if (this.years[value] == year && !this.countriesWithNoData.includes(this.countries[value])) {
+                    this.worldMapZData.push(this.energy[value]);
+                    this.worldMapCountryData.push(country);
+                }
+            }
+        }
+        console.log(this.worldMapCountryData)
+        console.log(this.worldMapZData)
+
     }
 
 }
