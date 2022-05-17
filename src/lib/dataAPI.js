@@ -7,14 +7,15 @@ class dataAPI {
         this.firstYear = Math.min.apply(Math, Object.values(this.years));
         this.lastYear = Math.max.apply(Math, Object.values(this.years));
         this.energy = energyData["Primary energy (TWh)"];
+        this.energyMaxValue = Math.max(41000);
         this.countryList = [];
         this.countryToIndexMap = {};
         this.searchString = "";
         this.worldMapZData = [];
         this.worldMapCountryData = [];
         this.worldMapDefaultYear = 2020;
-        this.countriesWithNoData = ["World", "Europe", "Africa", "Europian Union"];
-
+        this.countriesWithNoData = ["World", "Europe", "Africa", "Europian Union (27)", "OECD", "Non-OECD", "Asia Pacific"];
+        
         for (const key in this.countries) {
             const country = this.countries[key];
             if (!this.countryList.includes(country)) { this.countryList.push(country); }
@@ -25,7 +26,7 @@ class dataAPI {
                 this.countryToIndexMap[country].push(key);
             }
         }
-
+        
         this.genWorldData(this.worldMapDefaultYear)
     }
 
@@ -58,8 +59,6 @@ class dataAPI {
                 }
             }
         }
-        console.log(this.worldMapCountryData)
-        console.log(this.worldMapZData)
 
     }
 

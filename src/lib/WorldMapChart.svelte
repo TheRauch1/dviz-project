@@ -15,13 +15,15 @@
             },
         },
     };
-
+    
     var worldMapData = [
         {
             type: "choropleth",
             locationmode: "country names",
             locations: data.worldMapCountryData,
             z: data.worldMapZData,
+            zmin: 0,
+            zmax: data.energyMaxValue,
             text: data.worldMapCountryData,
             autocolorscale: true,
         },
@@ -29,16 +31,9 @@
 
     function changeYear(event) {
         data.genWorldData(event.srcElement.value);
-        worldMapData = [
-            {
-                type: "choropleth",
-                locationmode: "country names",
-                locations: data.worldMapCountryData,
-                z: data.worldMapZData,
-                text: data.worldMapCountryData,
-                autocolorscale: true,
-            },
-        ];
+        worldMapData[0].locations = data.worldMapCountryData;
+        worldMapData[0].z = data.worldMapZData;
+        worldMapData[0].text = data.worldMapCountryData;
         recreatePlot();
     }
 
