@@ -2,9 +2,9 @@
     import Plotly from "plotly.js-dist-min";
     import { onMount } from "svelte";
     import "bootstrap/dist/css/bootstrap.min.css";
-    import { dataAPI } from "./dataAPI.js";
+    import { DataAPI } from "./DataAPI.js";
 
-    var data = new dataAPI();
+    var data = new DataAPI();
     var year = data.worldMapDefaultYear;
 
     var worldMapLayout = {
@@ -15,7 +15,7 @@
             },
         },
     };
-    
+
     var worldMapData = [
         {
             type: "choropleth",
@@ -49,34 +49,32 @@
     });
 </script>
 
-<main>
-    <div class="container">
-        <div class="row">
-            <div class="col-2" />
-            <div class="col-8">
-                <div id="worldMap" />
-            </div>
-            <div class="col-2" />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2" />
+        <div class="col-8">
+            <div id="worldMap" />
         </div>
-        <div id="row">
-            <div class="col-2" />
-            <div class="col-8">
-                <label for="yearSlider" class="form-label">Year: {year}</label>
-                <input
-                    type="range"
-                    name="yearSlider"
-                    class="form-range"
-                    min={data.firstYear}
-                    max={data.lastYear}
-                    step="1"
-                    bind:value={year}
-                    on:input={changeYear}
-                />
-            </div>
-            <div class="col-2" />
-        </div>
+        <div class="col-2" />
     </div>
-</main>
+    <div id="row">
+        <div class="col-2" />
+        <div class="col-8">
+            <label for="yearSlider" class="form-label">Year: {year}</label>
+            <input
+                type="range"
+                name="yearSlider"
+                class="form-range"
+                min={data.firstYear}
+                max={data.lastYear}
+                step="1"
+                bind:value={year}
+                on:input={changeYear}
+            />
+        </div>
+        <div class="col-2" />
+    </div>
+</div>
 
 <style>
 </style>

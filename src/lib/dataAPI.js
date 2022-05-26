@@ -1,13 +1,13 @@
 import energyData from "../assets/energy.json";
 
-class dataAPI {
+class DataAPI {
     constructor() {
         this.countries = energyData["Country"];
         this.years = energyData["Year"];
         this.firstYear = Math.min.apply(Math, Object.values(this.years));
         this.lastYear = Math.max.apply(Math, Object.values(this.years));
         this.energy = energyData["Primary energy (TWh)"];
-        this.energyMaxValue = Math.max(41000);
+        this.energyMaxValue = 41000;
         this.countryList = [];
         this.countryToIndexMap = {};
         this.searchString = "";
@@ -64,4 +64,4 @@ class dataAPI {
 
 }
 
-export { dataAPI };
+export { DataAPI };

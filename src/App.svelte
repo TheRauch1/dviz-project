@@ -1,31 +1,40 @@
 <script>
   import "bootstrap/dist/css/bootstrap.min.css";
-  import EnergyLineChart from "./lib/EnergyLineChart.svelte";
-  import WorldMapChart from "./lib/WorldMapChart.svelte";
+  import MainPage from "./lib/MainPage.svelte";
+  import { selectedChart } from "./lib/stores";
+  import { charts } from "./lib/Charts";
 
-  let charts = [
-    { id: 1, name: "Energy Line chart", component: EnergyLineChart },
-    { id: 2, name: "World Map chart", component: WorldMapChart },
-  ];
+  let mainPage = { component: MainPage };
 
-  var selectedChart = charts[0];
+  let selectedChartValue;
+  selectedChart.subscribe((chart) => {
+    selectedChartValue = chart;
+  });
 
+  selectedChart.set(mainPage);
 </script>
 
 <main>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <span class="navbar-brand">Energy Dashboard</span>
+      <span on:click={() => selectedChart.set(mainPage)} class="navbar-brand"
+        >Energy Dashboard</span
+      >
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav">
           {#each charts as chart}
-            {#if selectedChart == chart}
+            {#if selectedChartValue == chart}
               <li class="navbar-item">
-                <a on:click={() => selectedChart = chart} class="nav-link active">{chart.name}</a>
+                <a
+                  on:click={() => selectedChart.set(chart)}
+                  class="nav-link active">{chart.name}</a
+                >
               </li>
-              {:else}
+            {:else}
               <li class="navbar-item">
-                <a on:click={() => selectedChart = chart} class="nav-link">{chart.name}</a>
+                <a on:click={() => selectedChart.set(chart)} class="nav-link"
+                  >{chart.name}</a
+                >
               </li>
             {/if}
           {/each}
@@ -34,8 +43,7 @@
     </div>
   </nav>
 
-  <svelte:component this={selectedChart.component} />
-
+  <svelte:component this={selectedChartValue.component} />
 </main>
 
 <style>
