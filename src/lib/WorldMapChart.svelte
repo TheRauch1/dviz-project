@@ -2,7 +2,7 @@
     import Plotly from "plotly.js-dist-min";
     import { onMount } from "svelte";
     import "bootstrap/dist/css/bootstrap.min.css";
-    import { DataAPI } from "./DataAPI.js";
+    import { DataAPI } from "./DataAPI";
 
     var data = new DataAPI();
     var year = data.worldMapDefaultYear;
