@@ -1,5 +1,5 @@
 <script>
-  import Plotly from "plotly.js-dist-min";
+  import Plotly, { plot } from "plotly.js-dist-min";
   import { onMount } from "svelte";
   import "bootstrap/dist/css/bootstrap.min.css";
   import { DataAPI } from "./dataAPI.js";
@@ -9,6 +9,7 @@
   var plotData = [];
   var plottedCountries = [];
   var filteredCountryList = data.countryList;
+  var selectedEnergyCategory;
 
   function filterCountry(e) {
     var searchKey = e.currentTarget.value;
@@ -22,7 +23,7 @@
   }
 
   var energyChartLayout = {
-    title: "Primary Energy",
+    title: data.energyDataCategories[0],
     dragmode: "pan",
     showlegend: true,
     yaxis: {
@@ -38,6 +39,15 @@
     });
   }
 
+  function switchCategory(e) {
+    plotData = [];
+    energyChartLayout.title = e.srcElement.value;
+    plottedCountries.forEach((country) => {
+      plotData = [...plotData, data.createTrace(country, e.srcElement.value)];
+    });
+    recreatePlot();
+  }
+
   function isCountryOnPlot(country) {
     var result = false;
     for (var trace of plotData) {
@@ -48,8 +58,8 @@
     return result;
   }
 
-  function addCountryToPlot(country) {
-    plotData = [...plotData, data.createTrace(country)];
+  function addCountryToPlot(country, category = selectedEnergyCategory) {
+    plotData = [...plotData, data.createTrace(country, category)];
     plottedCountries = [...plottedCountries, country];
     recreatePlot();
   }
@@ -74,7 +84,7 @@
   }
 
   onMount(() => {
-    addCountryToPlot("World");
+    addCountryToPlot("United States");
     recreatePlot();
   });
 </script>
@@ -123,6 +133,19 @@
       </div>
     </aside>
     <div class="col-9">
+      <div class="form-floating">
+        <select
+          name="categorySelect"
+          class="form-select"
+          on:change={switchCategory}
+          bind:value={selectedEnergyCategory}
+        >
+          {#each data.energyDataCategories as category}
+            <option value={category}>{category}</option>
+          {/each}
+        </select>
+        <label for="categorySelect">Select Energy Category</label>
+      </div>
       <div id="energyChart" />
     </div>
   </div>

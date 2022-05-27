@@ -6,7 +6,6 @@ class DataAPI {
         this.years = energyData["Year"];
         this.firstYear = Math.min.apply(Math, Object.values(this.years));
         this.lastYear = Math.max.apply(Math, Object.values(this.years));
-        this.energy = energyData["Primary energy (TWh)"];
         this.energyMaxValue = 41000;
         this.countryList = [];
         this.countryToIndexMap = {};
@@ -15,7 +14,19 @@ class DataAPI {
         this.worldMapCountryData = [];
         this.worldMapDefaultYear = 2020;
         this.countriesWithNoData = ["World", "Europe", "Africa", "Europian Union (27)", "OECD", "Non-OECD", "Asia Pacific"];
-        
+        this.energyDataCategories = [
+            "Primary energy (TWh)",
+            "Biofuels (TWh)",
+            "Hydro (TWh sub method)",
+            "Nuclear (TWh sub method)",
+            "Renewables (TWh sub method)",
+            "Solar (TWh sub method)",
+            "Wind (TWh sub method)"
+        ]
+        this.energy = energyData[this.energyDataCategories[0]];
+
+        console.log(this.energyDataCategories)
+
         for (const key in this.countries) {
             const country = this.countries[key];
             if (!this.countryList.includes(country)) { this.countryList.push(country); }
@@ -26,20 +37,20 @@ class DataAPI {
                 this.countryToIndexMap[country].push(key);
             }
         }
-        
+
         this.genWorldData(this.worldMapDefaultYear)
     }
 
-    createTrace(name) {
+    createTrace(countryName, category) {
         var xValues = [];
         var yValues = [];
 
-        this.countryToIndexMap[name].forEach((index) => {
+        this.countryToIndexMap[countryName].forEach((index) => {
             xValues.push(this.years[index]);
-            yValues.push(this.energy[index]);
+            yValues.push(energyData[category][index]);
         });
         var trace = {
-            name: name,
+            name: countryName,
             x: xValues,
             y: yValues,
             type: "scatter",
