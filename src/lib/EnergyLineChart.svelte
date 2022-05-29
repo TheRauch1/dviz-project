@@ -1,5 +1,5 @@
 <script>
-  import Plotly, { plot } from "plotly.js-dist-min";
+  import Plotly from "plotly.js-dist-min";
   import { onMount } from "svelte";
   import "bootstrap/dist/css/bootstrap.min.css";
   import { DataAPI } from "./dataAPI.js";
@@ -91,13 +91,11 @@
 <div class="container-fluid">
   <div class="row ">
     <aside class="col-3">
-      <div class="row">
         <div class="input-group">
           <span class="input-group-text">Search</span>
           <input type="text" class="form-control" on:input={filterCountry} />
-        </div>
       </div>
-      <div class="row vh-100 overflow-auto">
+      <div class="overflow-auto" style="height:90vh!important">
         <div class="list-group">
           {#each filteredCountryList as country}
             <label>

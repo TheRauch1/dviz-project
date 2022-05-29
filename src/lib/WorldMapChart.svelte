@@ -14,6 +14,7 @@
                 type: "robinson",
             },
         },
+        height: window.innerHeight*0.6
     };
 
     var worldMapData = [
@@ -25,7 +26,8 @@
             zmin: 0,
             zmax: data.energyMaxValue,
             text: data.worldMapCountryData,
-            autocolorscale: true,
+            colorscale: 'YlOrRd',
+            reversescale: true,
         },
     ];
 
@@ -51,11 +53,9 @@
 
 <div class="container">
     <div class="row">
-        <div class="col" />
-        <div class="col-8">
+        <div class="col">
             <div id="worldMap" />
         </div>
-        <div class="col" />
     </div>
     <div class="row">
         <div class="col" />

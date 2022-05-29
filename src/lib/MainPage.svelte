@@ -7,13 +7,14 @@
 <div class="container-fluid">
     <div class="row">
         {#each charts as chart}
-            <div class="col-6">
+            <div class="col-6 col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{chart.name}</h5>
+                        <p class="card-text">{ chart.description }</p>
                         <a
                             on:click={() => selectedChart.set(chart)}
-                            class="btn btn-primary">Go to Dashboard</a
+                            class="btn btn-warning">Go to Dashboard</a
                         >
                     </div>
                 </div>
