@@ -80,7 +80,6 @@
     } else {
       removeCountryFromPlot(country);
     }
-    console.log(plotData);
   }
 
   onMount(() => {

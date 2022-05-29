@@ -1,4 +1,3 @@
-import { debug } from "svelte/internal";
 import energyData from "../assets/energy.json";
 
 class DataAPI {
@@ -25,8 +24,6 @@ class DataAPI {
             "Wind (TWh sub method)"
         ]
         this.energy = energyData[this.energyDataCategories[0]];
-
-        console.log(this.energyDataCategories)
 
         for (const key in this.countries) {
             const country = this.countries[key];
@@ -56,7 +53,6 @@ class DataAPI {
             y: yValues,
             type: "scatter",
         };
-        console.log(trace);
         return trace;
     }
 

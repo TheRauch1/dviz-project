@@ -57,7 +57,7 @@
         </div>
         <div class="col" />
     </div>
-    <div id="row">
+    <div class="row">
         <div class="col" />
         <div class="col-8">
             <label for="yearSlider" class="form-label">Year: {year}</label>

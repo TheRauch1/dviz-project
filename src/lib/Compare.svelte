@@ -18,9 +18,9 @@
 </script>
 
 <div class="container">
-    <div class="col" />
-    <div class="col-8">
-        <div class="row">
+    <div class="row">
+        <div class="col" />
+        <div class="col-8">
             <table class="table">
                 <thead>
                     <tr>
@@ -58,14 +58,20 @@
                             <td>
                                 {countryData[0][category]}
                                 <br />
-                                <span>{firstCountry} uses { ((countryData[0][category] / countryData[1][category]) * 100).toPrecision(3)}% of {secondCountry}
-                            </td>
+                                <span
+                                    >{firstCountry} uses {(
+                                        (countryData[0][category] /
+                                            countryData[1][category]) *
+                                        100
+                                    ).toPrecision(3)}% of {secondCountry}
+                                </span></td
+                            >
                             <td>{countryData[1][category]}</td>
                         </tr>
                     {/each}
                 </tbody>
             </table>
         </div>
+        <div class="col" />
     </div>
-    <div class="col" />
 </div>
