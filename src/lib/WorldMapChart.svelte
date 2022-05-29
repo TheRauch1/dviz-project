@@ -5,7 +5,7 @@
     import { DataAPI } from "./dataAPI.js";
 
     var data = new DataAPI();
-    var year = data.worldMapDefaultYear;
+    var year = data.defaultYear;
 
     var worldMapLayout = {
         title: "Energy Usage in TWh by country",
@@ -30,7 +30,7 @@
     ];
 
     function changeYear(event) {
-        data.genWorldData(event.srcElement.value);
+        data.genWorldData(event.target.value);
         worldMapData[0].locations = data.worldMapCountryData;
         worldMapData[0].z = data.worldMapZData;
         worldMapData[0].text = data.worldMapCountryData;
@@ -49,16 +49,16 @@
     });
 </script>
 
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        <div class="col-2" />
+        <div class="col" />
         <div class="col-8">
             <div id="worldMap" />
         </div>
-        <div class="col-2" />
+        <div class="col" />
     </div>
     <div id="row">
-        <div class="col-2" />
+        <div class="col" />
         <div class="col-8">
             <label for="yearSlider" class="form-label">Year: {year}</label>
             <input
@@ -72,7 +72,7 @@
                 on:input={changeYear}
             />
         </div>
-        <div class="col-2" />
+        <div class="col" />
     </div>
 </div>
 

@@ -41,9 +41,9 @@
 
   function switchCategory(e) {
     plotData = [];
-    energyChartLayout.title = e.srcElement.value;
+    energyChartLayout.title = e.target.value;
     plottedCountries.forEach((country) => {
-      plotData = [...plotData, data.createTrace(country, e.srcElement.value)];
+      plotData = [...plotData, data.createTrace(country, e.target.value)];
     });
     recreatePlot();
   }

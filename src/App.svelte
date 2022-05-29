@@ -20,7 +20,7 @@
       <span on:click={() => selectedChart.set(mainPage)} class="navbar-brand"
         >Energy Dashboard</span
       >
-      <div class="collapse navbar-collapse">
+      <div class="navbar-collapse">
         <ul class="navbar-nav">
           {#each charts as chart}
             {#if selectedChartValue == chart}

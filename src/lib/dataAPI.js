@@ -1,3 +1,4 @@
+import { debug } from "svelte/internal";
 import energyData from "../assets/energy.json";
 
 class DataAPI {
@@ -12,7 +13,7 @@ class DataAPI {
         this.searchString = "";
         this.worldMapZData = [];
         this.worldMapCountryData = [];
-        this.worldMapDefaultYear = 2020;
+        this.defaultYear = 2020;
         this.countriesWithNoData = ["World", "Europe", "Africa", "Europian Union (27)", "OECD", "Non-OECD", "Asia Pacific"];
         this.energyDataCategories = [
             "Primary energy (TWh)",
@@ -38,7 +39,7 @@ class DataAPI {
             }
         }
 
-        this.genWorldData(this.worldMapDefaultYear)
+        this.genWorldData(this.defaultYear)
     }
 
     createTrace(countryName, category) {
@@ -71,6 +72,18 @@ class DataAPI {
             }
         }
 
+    }
+
+    genTableData(country) {
+        let resultMap = {};
+        for (const category of this.energyDataCategories) {
+            for (const value of Object.values(this.countryToIndexMap[country])) {
+                if (this.years[value] == this.defaultYear) {
+                    resultMap[category] = energyData[category][value]
+                }
+            }
+        }
+        return resultMap;
     }
 
 }
