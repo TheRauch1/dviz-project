@@ -27,9 +27,14 @@
     dragmode: "pan",
     showlegend: true,
     yaxis: {
-      tickformat: "100,",
+      tickformat: ",",
       ticksuffix: " TWh",
+      type: "log",
     },
+    xaxis: {
+      spikesnap: 'cursor'
+    },
+    colorway: ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928']
   };
 
   function recreatePlot() {
@@ -84,6 +89,8 @@
 
   onMount(() => {
     addCountryToPlot("United States");
+    addCountryToPlot("China");
+    addCountryToPlot("Switzerland");
     recreatePlot();
   });
 </script>
@@ -91,9 +98,9 @@
 <div class="container-fluid">
   <div class="row ">
     <aside class="col-3">
-        <div class="input-group">
-          <span class="input-group-text">Search</span>
-          <input type="text" class="form-control" on:input={filterCountry} />
+      <div class="input-group">
+        <span class="input-group-text">Search</span>
+        <input type="text" class="form-control" on:input={filterCountry} />
       </div>
       <div class="overflow-auto" style="height:90vh!important">
         <div class="list-group">
@@ -148,5 +155,9 @@
   </div>
 </div>
 
-<style>
+<style lang="css">
+  .form-check-input:checked {
+    background-color: #f7ca0e;
+    border-color: #f7ca0e;
+  }
 </style>

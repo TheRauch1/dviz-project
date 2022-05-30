@@ -7,6 +7,7 @@
     var data = new DataAPI();
     var firstCountry = "China";
     var secondCountry = "United States";
+    const reg = /\w+\s?(\w+)?/
 
     var countryData = [];
 
@@ -20,22 +21,33 @@
         yaxis: {
             tickformat: "100,",
             ticksuffix: " TWh",
+            type: 'log'
         },
         barmode: "group",
     };
 
     var firstCountryTrace = {
         name: firstCountry,
-        x: data.energyDataCategories,
+        x: data.energyDataCategories.map((category) => {
+            return category.match(reg)[0]
+        }),
         y: [],
         type: "bar",
+        marker: {
+            color: 'rgb(216,179,101)'
+        }
     };
 
     var secondCountryTrace = {
         name: secondCountry,
-        x: data.energyDataCategories,
+        x: data.energyDataCategories.map((category) => {
+            return category.match(reg)[0]
+        }),
         y: [],
         type: "bar",
+        marker: {
+            color: 'rgb(90,180,172)'
+        }
     };
 
     function recreatePlot() {
