@@ -17,7 +17,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <span on:click={() => selectedChart.set(mainPage)} class="navbar-brand text-warning"
-      >Energy Dashboard</span
+      >Energy Explorer</span
     >
     <div class="navbar-collapse">
       <ul class="navbar-nav">
