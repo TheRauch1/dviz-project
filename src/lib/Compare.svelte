@@ -19,7 +19,7 @@
         dragmode: "pan",
         showlegend: true,
         yaxis: {
-            tickformat: "100,",
+            tickformat: ",",
             ticksuffix: " TWh",
             type: 'log'
         },
