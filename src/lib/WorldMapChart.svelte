@@ -43,6 +43,7 @@
         document.getElementById("worldMap").innerHTML = "";
         Plotly.newPlot("worldMap", worldMapData, worldMapLayout, {
             scrollZoom: true,
+            displaylogo: false
         });
     }
 

@@ -7,7 +7,7 @@
     var data = new DataAPI();
     var firstCountry = "China";
     var secondCountry = "United States";
-    const reg = /\w+\s?(\w+)?/
+    const reg = /\w+\s?(\w+)?/;
 
     var countryData = [];
 
@@ -21,45 +21,65 @@
         yaxis: {
             tickformat: ",",
             ticksuffix: " TWh",
-            type: 'log'
         },
         barmode: "group",
+        updatemenus: [
+            {
+                buttons: [
+                    {
+                        label: "Linear scale",
+                        method: "relayout",
+                        args: [{ "yaxis.type": "linear" }],
+                    },
+                    {
+                        label: "Logarithmic scale",
+                        method: "relayout",
+                        args: [{ "yaxis.type": "log" }],
+                    },
+                ],
+                x: 0.0,
+                xanchor: "right",
+                y: 1.2,
+                yanchor: "top",
+            },
+        ],
     };
 
     var firstCountryTrace = {
         name: firstCountry,
         x: data.energyDataCategories.map((category) => {
-            return category.match(reg)[0]
+            return category.match(reg)[0];
         }),
         y: [],
         type: "bar",
         marker: {
-            color: 'rgb(216,179,101)'
-        }
+            color: "rgb(216,179,101)",
+        },
     };
 
     var secondCountryTrace = {
         name: secondCountry,
         x: data.energyDataCategories.map((category) => {
-            return category.match(reg)[0]
+            return category.match(reg)[0];
         }),
         y: [],
         type: "bar",
         marker: {
-            color: 'rgb(90,180,172)'
-        }
+            color: "rgb(90,180,172)",
+        },
     };
 
     function recreatePlot() {
         firstCountryTrace.name = firstCountry;
         secondCountryTrace.name = secondCountry;
-        comparisonBarchartLayout.title = "Comparison between " + firstCountry + " and " + secondCountry;
+        comparisonBarchartLayout.title =
+            "Comparison between " + firstCountry + " and " + secondCountry;
         document.getElementById("comparisonBarchart").innerHTML = "";
         Plotly.newPlot(
             "comparisonBarchart",
             [firstCountryTrace, secondCountryTrace],
             comparisonBarchartLayout,
-            {}
+            {displaylogo: false}
         );
     }
 
@@ -72,7 +92,7 @@
         for (const [key, value] of Object.entries(countryData[1])) {
             secondCountryTrace.y.push(value);
         }
-        console.log(firstCountryTrace)
+        console.log(firstCountryTrace);
 
         recreatePlot();
     }
