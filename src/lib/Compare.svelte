@@ -114,7 +114,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Stat</th>
+                        <th scope="col">Stat (Year 2020)</th>
                         <th scope="col">
                             <select
                                 name="0"

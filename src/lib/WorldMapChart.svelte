@@ -8,7 +8,7 @@
     var year = data.defaultYear;
 
     var worldMapLayout = {
-        title: "Energy Usage in TWh by country",
+        title: "Primary Energy Usage in TWh by country",
         geo: {
             projection: {
                 type: "robinson",
